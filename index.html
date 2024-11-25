@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+      width: 250px;
+      background-color: #6a5acd;
+      color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile img {
+      width: 70px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .profile h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .menu {
+      margin-top: 20px;
+    }
+
+    .menu p {
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .menu .dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .dot.personal {
+      background-color: pink;
+    }
+
+    .dot.freelance {
+      background-color: lightblue;
+    }
+
+    .dot.work {
+      background-color: gold;
+    }
+
+    .add-filter {
+      color: #ddd;
+      font-size: 14px;
+    }
+
+    .menu li {
+      list-style: none;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    /* Main content styles */
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .task-input {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .task-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .task-input button {
+      padding: 10px 20px;
+      background-color: #6a5acd;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .tasks {
+      list-style: none;
+      padding: 0;
+    }
+
+    .task {
+      background-color: white;
+      padding: 10px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .task button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Modal styles (optional) */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        <img src="NEC0822031 (1).JPG" alt="Profile Picture">
+        <h3>GUNA K</h3>
+      </div>
+
+      <div class="menu">
+        <p><strong>Today's Tasks</strong></p>
+        <p><span class="dot personal"></span>Personal</p>
+        <p><span class="dot freelance"></span>Freelance</p>
+        <p><span class="dot work"></span>Work</p>
+        <p class="add-filter">+ Add filter</p>
+      </div>
+      <li>Scheduled Tasks</li>
+
+  <li>Settings</li>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="header">
+        <h2>Today's Main Focus</h2>
+        <h3>Design Team Meeting</h3>
+      </div>
+      <div class="task-input">
+        <input id="taskInput" type="text" placeholder="What is your next task?">
+        <button onclick="addTask()">Add</button>
+      </div>
+      <ul id="tasks" class="tasks"></ul>
+    </main>
+  </div>
+
+  <script>
+    // Initialize tasks from localStorage
+    document.addEventListener('DOMContentLoaded', loadTasks);
+
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.forEach((task) => displayTask(task));
+    }
+
+    // Add task functionality
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const taskValue = taskInput.value.trim();
+      if (taskValue === '') return;
+
+      const task = {
+        text: taskValue,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+
+      displayTask(task);
+      saveTask(task);
+
+      taskInput.value = '';
+    }
+
+    // Display task in the UI
+    function displayTask(task) {
+      const tasks = document.getElementById('tasks');
+
+      const li = document.createElement('li');
+      li.className = 'task';
+      li.innerHTML = `
+        <span>${task.text}</span>
+        <time>${task.time}</time>
+        <button onclick="removeTask(this)">Remove</button>
+      `;
+
+      tasks.appendChild(li);
+    }
+
+    // Save task to localStorage
+    function saveTask(task) {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.push(task);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Remove task
+    function removeTask(button) {
+      const task = button.parentElement;
+      const taskText = task.querySelector('span').textContent;
+
+      removeTaskFromStorage(taskText);
+      task.remove();
+    }
+
+    // Remove task from localStorage
+    function removeTaskFromStorage(taskText) {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      const updatedTasks = tasks.filter((task) => task.text !== taskText);
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    }
+  </script>
+</body>
+</html>

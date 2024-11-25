@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  background-color: #f4f4f4;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #6a5acd;
+  color: white;
+  padding: 20px;
+}
+
+.profile img {
+  width: 70px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.profile h3 {
+  margin: 0;
+}
+
+.menu p {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.menu .dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.dot.personal {
+  background-color: pink;
+}
+
+.dot.freelance {
+  background-color: lightblue;
+}
+
+.dot.work {
+  background-color: gold;
+}
+
+.add-filter {
+  color: #ddd;
+  font-size: 14px;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.task-input {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.task-input input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.task-input button {
+  padding: 10px 20px;
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tasks {
+  list-style: none;
+  padding: 0;
+}
+
+.tasks .task {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.modal-content {
+  text-align: center;
+}
+
+.modal.active {
+  display: block;
+}
